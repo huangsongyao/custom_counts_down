@@ -98,7 +98,7 @@ class _HSYCountDownButtonState extends State<HSYCountDownButton> {
         StreamController<String>.broadcast());
     if (this.widget.onReleaseTimer != null) {
       this.widget.onReleaseTimer(_currentTimes).stream.listen(
-            (event) {
+        (event) {
           _releaseTimer(event);
         },
       );
@@ -148,7 +148,11 @@ class _HSYCountDownButtonState extends State<HSYCountDownButton> {
       onTap: () {
         if (_stopTimerState && this.widget.onTap != null) {
           this.widget.onTap(this.widget.maxTimes, this.widget.minTimes).then(
-                (value) {
+            (value) {
+              if (!value) {
+                _stopTimerState = true;
+                return;
+              }
               _startTimer();
             },
           );
@@ -181,7 +185,7 @@ class _HSYCountDownButtonState extends State<HSYCountDownButton> {
     _timerStreamController.sink.add('${this.widget.maxTimes}s');
     return Timer.periodic(
       this.widget.timerDuration,
-          (Timer timer) {
+      (Timer timer) {
         HSYTimerState state = HSYTimerState.Bouncing;
         _currentTimes = min((_currentTimes + 1), this.widget.maxTimes);
         String signal = '${this.widget.maxTimes - _currentTimes}s';
@@ -202,10 +206,10 @@ class _HSYCountDownButtonState extends State<HSYCountDownButton> {
   ]) {
     if (this.widget.onTimerChanged != null) {
       this.widget.onTimerChanged(
-        _currentTimes,
-        (this.widget.maxTimes - _currentTimes),
-        state,
-      );
+            _currentTimes,
+            (this.widget.maxTimes - _currentTimes),
+            state,
+          );
     }
   }
 
